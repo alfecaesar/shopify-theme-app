@@ -1,0 +1,133 @@
+{% style %}
+
+  #shopify-section-{{ section.id }}{
+    padding-top: {{ block.settings.section_padding_top | append: 'px' }}
+    ;
+    padding-bottom: {{ block.settings.section_padding_bottom | append: 'px' }}
+    ;
+  }
+
+  .hello-world_carousel {
+    overflow-x: auto;
+    padding-left: 0;
+    padding-right: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .hello-world_carousel .container {
+    display: flex;
+    flex-wrap: nowrap;
+    {%- if block.settings.featured_products.size < 4 -%}
+      justify-content: center;
+    {%- endif -%}
+  }
+
+  .hello-world_carousel .container .hw-box {
+    scroll-snap-align: start;
+    flex: 0 0 25%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .hello-world_carousel .container .hw-box .hw-box_img img {
+    width: 120px;
+    height: 120px;
+    border: 1px solid #eee;
+    border-radius: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center center;
+    aspect-ratio: 1 / 1;
+  }
+
+  .hello-world_carousel .container .hw-box .hw-box_label p {
+    margin-top: 10px;
+    margin-bottom: 0;
+    text-align: center;
+  }
+
+  .hello-world_heading h2 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  @media(max-width: 768px) {
+    .hello-world_carousel .container .hw-box .hw-box_img img {
+      width: 60px;
+      height: 60px;
+    }
+    .hello-world_carousel::-webkit-scrollbar {
+      display: none;
+    }
+    .hello-world_carousel .container .hw-box {
+      flex: 0 0 33%;
+    }
+  }
+
+  @media(max-width: 500px) {
+    .hello-world_carousel .container .hw-box {
+      flex: 0 0 50%;
+    }
+  }
+{% endstyle %}
+
+<div class="hello-world_heading">
+  <h2 class="h1">{{ block.settings.heading_text }}</h2>
+</div>
+
+<div class="hello-world_carousel">
+  <div class="container">
+    {% for product in block.settings.featured_products %}
+      <div class="hw-box">
+        <div class="hw-box_img">
+          <a href="{{ product.url }}">{{ product.featured_image | img_url: 'master' | img_tag }}</a>
+        </div>
+        <div class="hw-box_label">
+          <p>{{ product.title }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Hello World Carousel",
+    "target": "section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "heading_text",
+        "label": "Heading Text",
+        "default": "Hello World!"
+      }, {
+        "type": "range",
+        "id": "section_padding_top",
+        "label": "Section Padding Top",
+        "min": 1,
+        "max": 100,
+        "step": 1,
+        "default": 50,
+        "unit": "px"
+      }, {
+        "type": "range",
+        "id": "section_padding_bottom",
+        "label": "Section Padding Bottom",
+        "min": 1,
+        "max": 100,
+        "step": 1,
+        "default": 50,
+        "unit": "px"
+      }, {
+        "type": "product_list",
+        "id": "featured_products",
+        "label": "Featured Products",
+        "limit": 10
+      }
+    ]
+  }
+{% endschema %}
